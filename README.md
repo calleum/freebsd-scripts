@@ -7,7 +7,7 @@ Very simple statusbar script which displays the used memory, battery %, state an
 
 Use with your window manager, set the brightness keys (in my case 0x10, 0x11) in /etc/sysctl.conf:
 ```
-    dev.acpi_ibm.0.handlerevents=0x10\ 0x11
+dev.acpi_ibm.0.handlerevents=0x10\ 0x11
 ```
 To use these brightness keys, create /etc/devd/acpi_brightness.conf:
 ```
