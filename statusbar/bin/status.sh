@@ -76,7 +76,7 @@ battery() {
     CAPACITY1=$(acpiconf -i 0 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
     CAPACITY2=$(acpiconf -i 1 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
     TIME=$(acpiconf -i 1 | grep 'Remaining time:' | cut -f3)
-    STATE=$(acpiconf -i 1 | grep 'State:' | cut -f4)
+    STATE=$(acpiconf -i 0 | grep 'State:' | cut -f4)
 
     CAPACITY=$(printf "%.0f" "$(echo "$CAPACITY1 * 0.35 + $CAPACITY2 * 0.65" | bc -l )")
 
@@ -105,7 +105,9 @@ brand() {
     echo "$BRAND"
 }
 
-while true; do
-    xsetroot -name  " $(free_memory) | $(battery) | $(dte) | $(brand)"
-    sleep 1
-done &
+status(){
+    while true; do
+        xsetroot -name  " $(free_memory) | $(battery) | $(dte) | $(brand)"
+        sleep 1
+    done &
+}
