@@ -75,7 +75,7 @@ battery() {
 
     CAPACITY1=$(acpiconf -i 0 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
     CAPACITY2=$(acpiconf -i 1 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
-    TIME=$(acpiconf -i 1 | grep 'Remaining time:' | cut -f3)
+    TIME=$(sysctl hw.acpi.battery.time | awk '{print $2}')
     STATE=$(acpiconf -i 0 | grep 'State:' | cut -f4)
 
     CAPACITY=$(printf "%.0f" "$(echo "$CAPACITY1 * 0.35 + $CAPACITY2 * 0.65" | bc -l )")
@@ -93,8 +93,14 @@ battery() {
 	STATE="~"
     fi
 
+    PRINT_TIME=$(awk -v i=${TIME} 'BEGIN{
+                    minutes = int(int(i) / 60)
+                    secs = int(int(i) % 60)
+                    printf"%d:%2d\n",minutes,secs
+                }')
+
     if [ $STATE = "-" ]; then
-        echo "B: $CAPACITY% [$STATE] ($TIME)"
+        echo "B: $CAPACITY% [$STATE] ($PRINT_TIME)"
     else
         echo "B: $CAPACITY% [$STATE]"
     fi
@@ -105,9 +111,7 @@ brand() {
     echo "$BRAND"
 }
 
-status(){
     while true; do
         xsetroot -name  " $(free_memory) | $(battery) | $(dte) | $(brand)"
         sleep 1
     done &
-}

@@ -9,7 +9,7 @@ DATADIR=$(PREFIX)/share/status
 all: status.sh
 
 status.sh:
-	echo '$(cat $(EPREFIX)$(DATADIR)/status.sh)' >status.sh
+	echo '#!/bin/cat $(DATADIR)/status.sh' >status.sh
 
 install: status.sh
 	install -d '$(DESTDIR)$(BINDIR)'
