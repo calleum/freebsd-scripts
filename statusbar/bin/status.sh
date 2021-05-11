@@ -76,13 +76,14 @@ battery() {
     CAPACITY2=$(acpiconf -i 1 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
     TIME=$(sysctl hw.acpi.battery.time | awk '{print $2}')
     STATE=$(acpiconf -i 0 | grep 'State:' | cut -f4)
+    STATE1=$(acpiconf -i 1 | grep 'State:' | cut -f4)
 
     CAPACITY=$(printf "%.0f" "$(echo "$CAPACITY1 * 0.35 + $CAPACITY2 * 0.65" | bc -l )")
 
 
-    if [ "$STATE" = "discharging" ]; then
+    if [ "$STATE" = "discharging" -o "$STATE1" = "discharging" ]; then
         STATE="-"
-    elif [ $STATE = "charging" ]; then
+    elif [ $STATE = "charging" -o "$STATE1" = "charging" ]; then
         STATE="+"
     elif [ $STATE = "high" ]; then
         STATE="="
@@ -123,6 +124,6 @@ brand() {
 }
 
     while true; do
-        xsetroot -name  " $(disk) | $(free_memory) | $(battery) | $(dte) | $(cpu_temp)"
+        xsetroot -name  " $(disk) | $(free_memory) | $(battery) | $(dte) | $(cpu_temp) "
         sleep 1
     done &
