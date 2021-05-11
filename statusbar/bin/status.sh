@@ -72,7 +72,6 @@ dte() {
 }
 
 battery() {
-
     CAPACITY1=$(acpiconf -i 0 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
     CAPACITY2=$(acpiconf -i 1 | grep 'Remaining capacity:' | cut -f2 | sed s/%//)
     TIME=$(sysctl hw.acpi.battery.time | awk '{print $2}')
@@ -96,7 +95,7 @@ battery() {
     PRINT_TIME=$(awk -v i=${TIME} 'BEGIN{
                     minutes = int(int(i) / 60)
                     secs = int(int(i) % 60)
-                    printf"%d:%2d\n",minutes,secs
+                    printf"%d:%02d\n",minutes,secs
                 }')
 
     if [ $STATE = "-" ]; then
@@ -107,9 +106,15 @@ battery() {
 }
 
 disk() {
-    DISK=$( df -Hl / | grep dev | cut -w -f 4)
+    DISK=$( df -Hl / | grep dev | cut -w -f 3)
 
     echo "D: $DISK"
+}
+
+cpu_temp() {
+    TEMP="$(sysctl dev.cpu | grep -m 1 temperature | cut -w -f 2)"
+
+    echo "C: $TEMP"
 }
 
 brand() {
@@ -118,6 +123,6 @@ brand() {
 }
 
     while true; do
-        xsetroot -name  " $(disk) | $(free_memory) | $(battery) | $(dte) | $(brand)"
+        xsetroot -name  " $(disk) | $(free_memory) | $(battery) | $(dte) | $(cpu_temp)"
         sleep 1
     done &
