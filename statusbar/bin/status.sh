@@ -107,7 +107,7 @@ battery() {
 }
 
 disk() {
-    DISK=$( df -Hl / | grep dev | cut -w -f 3)
+    DISK=$( df -Hl / | grep ROOT | cut -w -f 3)
 
     echo "D: $DISK"
 }
@@ -125,5 +125,5 @@ brand() {
 
     while true; do
         xsetroot -name  " $(disk) | $(free_memory) | $(battery) | $(dte) | $(cpu_temp) "
-        sleep 1
+        sleep 3
     done &

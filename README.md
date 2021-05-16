@@ -25,3 +25,5 @@ notify 20 {
  action "/usr/local/bin/acpi_brightness_control.sh 0";
 }
 ```
+## ./sbg.sh
+Set Background with feh randomly from directory.
